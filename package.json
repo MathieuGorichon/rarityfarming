@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "start": "node --experimental-json-modules --no-warnings forest.mjs",
+        "debug": "node --experimental-json-modules forest.mjs"
+    },
+    "dependencies": {
+        "web3": "^1.5.2"
+    }
+}
