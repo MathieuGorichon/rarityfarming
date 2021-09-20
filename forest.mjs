@@ -9,15 +9,24 @@ import config from './config.json'
 
 const forest_address = "0xb37d3d79ea86B0334d9322c695339D577A3D57be";
 
-const summoners = [774976, 775995];
-
+//const summoners = [774976, 775995];
+const summoners = [629712, 692333, 774967, 774974, 774976, 775995, 776239, 776468, 776570, 776819,
+                    980608, 980638, 980644, 980649, 980652, 980655, 980659, 980680, 980681, 980701,
+                   1311940, 1311955, 1311985, 1312038, 1312059, 1312147, 1312149, 1312168, 1383037, 1383090,
+                   1383152, 1383225, 1383448, 1477623, 1477640, 1477645, 1477657, 1477728, 1477729, 1477735,
+                   1477736, 1477815, 1477816]
+ 
 const web3 = new Web3(config.network.rpc);
 const forest = new web3.eth.Contract(FOREST_ABI, forest_address);
 
 web3.eth.accounts.wallet.add(config.my_private_key);
 
+async function getNonce() {
+    const nonce = await web3.eth.getTransactionCount(config.myAddress);
+    return nonce;
+}
 
-async function startResearch(summoner) {
+async function startResearch(summoner, nonce) {
     try {
         let estimated_gas = await forest.methods.startResearch(summoner, config.days).estimateGas(
             {
@@ -48,7 +57,8 @@ async function startResearch(summoner) {
         .send({
             from: config.myAddress,
             gasPrice: gas_price,
-            gas: "179043"
+            gas: "179043",
+            nonce: nonce
         }).on('sent', () => {
             console.log(`${summoner}: Transaction submitted ...`)
         }).on('transactionHash', (hash) => {
@@ -57,16 +67,18 @@ async function startResearch(summoner) {
             console.log(`${summoner}: Summoner is in the forest!`)
         })
         .catch((error) => {
-            console.log('Error', error)
+            console.log(`${summoner}: Error`, error)
         });
 }
 
 async function main() {
     console.log(`Starting...`);
+    let nonce = await getNonce()
+    console.log("nonce", nonce)
     summoners.forEach(summoner => {
         console.log(`${summoner}: Sending summoner in the forest...`);
-        startResearch(summoner);
+        startResearch(summoner, nonce++);
     })
-};
+ };
 
 main();
