@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 import config from './config.json'
 
 const crafting_materials_address = "0x2A0F1cB17680161cF255348dDFDeE94ea8Ca196A";
-
+const rarity_address = "0xce761D788DF608BD21bdd59d6f4B54b2e27F25Bb";
 const MIN_BALANCE = 10;
 
 // const web3 = new Web3(new Web3.providers.WebsocketProvider("wss://wsapi.fantom.network/"));
