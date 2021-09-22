@@ -8,4 +8,6 @@ Then you'll need to open up a terminal/command line in the correct folder, and r
 
 `npm i` to install required software.
 
-`npm start` to start farming!
+`npm start -- forest` to send summoners to the forest!
+
+`npm start -- transfer` to transfer crafting materials from farmers to crafter
