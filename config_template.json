@@ -1,9 +1,13 @@
-{   "network": {
-        "chain_id": "250",
-        "rpc": "https://rpc.ftm.tools/"
-    },
-    "maximum_gas_price": 500,
-    "myAddress": "",
-    "my_private_key": "",
-    "days": 7
+{
+  "network": {
+    "chain_id": "250",
+    "rpc": "https://rpc.ftm.tools/"
+  },
+  "maximum_gas_price": 500,
+  "myAddress": "",
+  "my_private_key": "",
+  "ftmscan_apikey": "",
+  "days": 7,
+  "dry_run": true,
+  "crafter": <crafter_summoner_id>
 }
