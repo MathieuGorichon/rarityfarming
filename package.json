@@ -1,9 +1,15 @@
 {
+    "name": "rarity-farming-app",
     "scripts": {
-        "start": "node --experimental-json-modules --no-warnings forest.mjs",
-        "debug": "node --experimental-json-modules forest.mjs"
+        "start": "node --experimental-json-modules --no-warnings app.mjs",
+        "debug": "node --experimental-json-modules app.mjs"
+    },
+    "bin": {
+        "farming": "./app.mjs"
     },
     "dependencies": {
-        "web3": "^1.5.2"
+        "web3": "^1.5.2",
+        "node-fetch": "^2.6.4",
+        "commander": "^8.2.0"
     }
 }
