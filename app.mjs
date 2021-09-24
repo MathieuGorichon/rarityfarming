@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander/esm.mjs';
-import Transfer from './transfer.mjs';
 import Forest from './forest.mjs';
+import TransferCraftingMaterials from "./transfer_crafting_materials.mjs";
+import TransferGold from "./transfer_gold.mjs";
 
 const program = new Command();
 
@@ -12,8 +13,13 @@ program
     .action(()=> new Forest().run());
 
 program
-    .command("transfer")
+    .command("transfer-mats")
     .description("Transfer crafting materials from farmers to crafter")
-    .action(()=> new Transfer().run());
+    .action(()=> new TransferCraftingMaterials().run());
+
+program
+    .command("transfer-gold")
+    .description("Transfer gold from farmers to crafter")
+    .action(()=> new TransferGold().run());
 
 program.parse(process.argv);

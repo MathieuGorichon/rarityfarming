@@ -1,19 +1,15 @@
-import RARITY_ABI from "./rarityabi.json";
-import FOREST_ABI from "./forestabi.json";
-import NAMES_ABI from "./namesabi.json";
-import CRAFTING_MATERIALS_ABI from "./craftingmaterialsabi.json";
+import GOLD_ABI from "./goldabi.json";
 import Web3 from 'web3';
 import fetch from 'node-fetch';
 
 import config from './config.json'
 
-const crafting_materials_address = "0x2A0F1cB17680161cF255348dDFDeE94ea8Ca196A";
+const gold_address = "0x2069B76Afe6b734Fb65D1d099E7ec64ee9CC76B2";
 const rarity_address = "0xce761D788DF608BD21bdd59d6f4B54b2e27F25Bb";
-const MIN_BALANCE = 10;
+const MIN_BALANCE = 1;
 
-// const web3 = new Web3(new Web3.providers.WebsocketProvider("wss://wsapi.fantom.network/"));
 const web3 = new Web3(config.network.rpc);
-const craftingMaterials = new web3.eth.Contract(CRAFTING_MATERIALS_ABI, crafting_materials_address);
+const gold = new web3.eth.Contract(GOLD_ABI, gold_address);
 
 
 web3.eth.accounts.wallet.add(config.my_private_key);
@@ -22,18 +18,19 @@ async function getNonce() {
     return await web3.eth.getTransactionCount(config.myAddress);
 }
 
-async function transfer(from, to, amount, nonce) {
+async function transfer_gold(from, to, amount, nonce) {
     let max_price;
     let estimated_gas = 0;
     try {
-        estimated_gas = await craftingMaterials.methods.transfer(from, to, amount).estimateGas(
+        estimated_gas = await gold.methods.transfer(from, to, amount).estimateGas(
             {
                 from: config.myAddress,
                 gas: '179043'
             });
         // console.log(`[#${from}] Estimated gas required is ${estimated_gas}.`);
     } catch (error) {
-        console.log(`[#${from}] The gas required for the transaction is too high, summoner is probably already in the forest.`);
+        console.error(error);
+        console.log(`[#${from}] The gas required for the transaction (${estimated_gas}) is too high, summoner is probably already in the forest.`);
         return;
     }
 
@@ -52,7 +49,7 @@ async function transfer(from, to, amount, nonce) {
     }
 
     if (!config.dry_run) {
-        await craftingMaterials.methods.transfer(from, to, amount)
+        await gold.methods.transfer(from, to, amount)
             .send({
                 from: config.myAddress,
                 gasPrice: gas_price,
@@ -85,10 +82,10 @@ function findFarmers(summoners) {
     return summoners.filter(s => s !== config.crafter);
 }
 
-export default class Transfer {
+export default class TransferCraftingMaterials {
 
     async run() {
-        console.log("ready to transfer");
+        console.log("ready to transfer gold");
 
         let nonce = await getNonce();
         console.log("nonce", nonce);
@@ -97,11 +94,11 @@ export default class Transfer {
         let farmers = findFarmers(summoners);
 
         farmers.forEach(summoner => {
-            craftingMaterials.methods.balanceOf(summoner).call({from: config.myAddress})
+            gold.methods.balanceOf(summoner).call({from: config.myAddress})
                 .then(function (balance) {
                     let amount = parseInt(balance);
-                    if (balance >= MIN_BALANCE) {
-                        transfer(summoner, config.crafter, amount, nonce++);
+                    if (amount >= MIN_BALANCE) {
+                        transfer_gold(summoner, config.crafter, balance, nonce++);
                     }
                 });
         })
